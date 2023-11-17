@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+D:/CE/Embedded/LAB/Exercise/Lab3_Co-operative/build/CMakeFiles/bootloader
+D:/CE/Embedded/LAB/Exercise/Lab3_Co-operative/build/CMakeFiles/bootloader.rule
+D:/CE/Embedded/LAB/Exercise/Lab3_Co-operative/build/CMakeFiles/bootloader-complete.rule
+D:/CE/Embedded/LAB/Exercise/Lab3_Co-operative/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+D:/CE/Embedded/LAB/Exercise/Lab3_Co-operative/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+D:/CE/Embedded/LAB/Exercise/Lab3_Co-operative/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+D:/CE/Embedded/LAB/Exercise/Lab3_Co-operative/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+D:/CE/Embedded/LAB/Exercise/Lab3_Co-operative/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+D:/CE/Embedded/LAB/Exercise/Lab3_Co-operative/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+D:/CE/Embedded/LAB/Exercise/Lab3_Co-operative/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
