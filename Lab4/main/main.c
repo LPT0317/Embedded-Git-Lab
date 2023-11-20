@@ -25,7 +25,9 @@ int idTask3 = 2;
 struct Data_t
 {
 	int DeviceID;
+	int check_Error;
 	uint32_t DataValue;
+
 };
 
 void queueCreate(void *pvParameter) {
@@ -45,8 +47,9 @@ void receptionTask(void *pvParameter) {
 	else
 		while(1) {
 			struct Data_t *queueData = malloc(sizeof(struct Data_t));
-			queueData->DeviceID = (int)(rand() % 3);
+			queueData->DeviceID = (int)(rand() % 4);
 			queueData->DataValue = (uint32_t)(rand());
+			queueData->check_Error = 0;
 			if (xQueueSend(Queue, (void *) &queueData, portMAX_DELAY)){
 				printf("Reception send data=0x%lx to device ID=%d to queue successful!\n", queueData->DataValue, queueData->DeviceID);
 			}
@@ -64,11 +67,20 @@ void functionalTask(void *pvParameter) {
 		while(1) {
 			struct Data_t *queueData;
 			int *deviceID = (int *)pvParameter;
-			if (xQueuePeek(Queue, &queueData, 10)) {
+			if (xQueueReceive(Queue, &queueData, 10)) {
 				if (queueData->DeviceID == *deviceID) {
-					xQueueReceive(Queue, &queueData, 10);
 					printf("Device: ID=%d receive data=0x%lx\n", queueData->DeviceID, queueData->DataValue);
 					free(queueData);
+				}
+				else {
+					if (queueData->check_Error < NUM_TASK) {
+						queueData->check_Error++;
+						xQueueSendToFront(Queue, (void *) &queueData, portMAX_DELAY);
+					}
+					else {
+						printf("Data: ID=%d, data=0x%lx is rejected!\n", queueData->DeviceID, queueData->DataValue);
+						free(queueData);
+					}
 				}
 			}
 			vTaskDelay(pdMS_TO_TICKS(10));
