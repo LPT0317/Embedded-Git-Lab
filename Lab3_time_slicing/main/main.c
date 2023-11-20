@@ -21,7 +21,7 @@ void vApplicationIdleHook ( void )
 {
 	ulIdleCycleCount++;
 	flag = 1;
-	if (ulIdleCycleCount == 1000)
+	if (ulIdleCycleCount % 500 == 0)
 		xEventGroupSetBits(event_group, trigger_Task1);
 }
 
