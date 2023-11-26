@@ -23,14 +23,14 @@ int checkSum(char *data) {
 	return 0;
 }
 
-void heartbeatPackage(uint8_t ID, int status, int signal, char* data) {
+void heartbeatPackage(uint8_t ID, int status, int floor, int trash, int signal, char* data) {
 	data[0] = 0x0A;
 	data[7] = 0x0B;
 	data[1] = ID;
 	data[2] = 0xA0;
 	if (status)
 		data[2] += 0x01;
-	data[3] = 0x00;
+	data[3] = (floor << 4) + trash;
 	data[4] = ((signal / 10) << 4) + (signal % 10);
 	uint16_t check_sum = 0;
 	for (int i = 1; i < 5; i++)
@@ -39,13 +39,13 @@ void heartbeatPackage(uint8_t ID, int status, int signal, char* data) {
 	data[6] = check_sum;
 }
 
-void dataPackage(uint8_t ID, int capacity, int floor, int trash, char* data) {
+void dataPackage(uint8_t ID, int capacity, char* data) {
 	data[0] = 0x0A;
 	data[7] = 0x0B;
 	data[1] = ID;
 	data[2] = 0xB0;
 	data[3] = ((capacity / 10) << 4) + (capacity % 10);
-	data[4] = (floor << 4) + trash;
+	data[4] = 0x00;
 	uint16_t check_sum = 0;
 	for (int i = 1; i < 5; i++)
 		check_sum += data[i];
@@ -98,14 +98,14 @@ void getData(const char* logName, char *data, char* json) {
 	int package = getType(logName, data);
 	if (package == HEARTBEAT) {
 		int status = data[2] & 0x0f;
+		int floor = (data[3] & 0xf0) >> 4;
+		int trash = data[3] & 0x0f;
 		int signal = ((data[4] & 0xf0) >> 4) * 10 + (data[4] & 0x0f);
-		sprintf(json, "{status: %d, signal: %d}", status, signal);
+		sprintf(json, "{status: %d, floor: %d, trash_id: %d, signal: %d}", status, floor, trash, signal);
 	}
 	else if (package == DATA) {
 		int capacity = ((data[3] & 0xf0) >> 4) * 10 + (data[3] & 0x0f);
-		int floor = (data[4] & 0xf0) >> 4;
-		int trash = data[4] & 0x0f;
-		sprintf(json, "{capacity: %d, floor: %d, trash_id: %d}", capacity, floor, trash);
+		sprintf(json, "{capacity: %d}", capacity);
 	}
 	else if (package == RESPONSE) {
 		ESP_LOGI(logName, "Data package is Response package!");
