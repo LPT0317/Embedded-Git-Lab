@@ -8,5 +8,7 @@
 #define RX_BUFFER 8
 
 void uart_config(void);
-int sendData(const char* logName, uart_dev_t uart, const char* data);
-void receiveData(const char* logName, uart_dev_t uart, const char* data);
+int sendData_UART1(const char* logName, char* data);
+void receiveData_UART1(const char* logName, char* data);
+int sendData_UART2(const char* logName, char* data);
+void receiveData_UART2(const char* logName, char* data);

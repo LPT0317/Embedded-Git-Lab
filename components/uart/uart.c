@@ -25,15 +25,31 @@ void uart_config(void) {
 	uart_set_pin(UART2, UART2_TXD_PIN, UART2_RXD_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
 }
 
-int sendData(const char* logName, uart_dev_t uart, const char* data) {
+int sendData_UART1(const char* logName, char* data) {
 	const int len = strlen(data);
-	const int txBytes = uart_write_bytes(uart, data, len);
+	const int txBytes = uart_write_bytes(UART1, data, len);
 	ESP_LOGI(logName, "Send data to UART");
 	return txBytes;
 }
 
-void receiveData(const char* logName, uart_dev_t uart, const char* data) {
-	const int rxBytes = uart_read_bytes(uart, data, RX_BUF_SIZE, 1000 / portTICK_PERIOD_MS);
+void receiveData_UART1(const char* logName, char* data) {
+	const int rxBytes = uart_read_bytes(UART1, data, RX_BUF_SIZE, 1000 / portTICK_PERIOD_MS);
+	if (rxBytes > 0) {
+		data[rxBytes] = 0;
+		ESP_LOGI(logName, "Read %d bytes: '%s'", rxBytes, data);
+		ESP_LOG_BUFFER_HEXDUMP(logName, data, rxBytes, ESP_LOG_INFO);
+	}
+}
+
+int sendData_UART2(const char* logName, char* data) {
+	const int len = strlen(data);
+	const int txBytes = uart_write_bytes(UART2, data, len);
+	ESP_LOGI(logName, "Send data to UART");
+	return txBytes;
+}
+
+void receiveData_UART2(const char* logName, char* data) {
+	const int rxBytes = uart_read_bytes(UART2, data, RX_BUF_SIZE, 1000 / portTICK_PERIOD_MS);
 	if (rxBytes > 0) {
 		data[rxBytes] = 0;
 		ESP_LOGI(logName, "Read %d bytes: '%s'", rxBytes, data);
